@@ -40,10 +40,10 @@ exports.up = async function (knex) {
         .onDelete("RESTRICT")
         .onUpdate("RESTRICT");
       table
-        .integer("resources_id")
+        .integer("resource_id")
         .unsigned()
         .notNullable()
-        .references("resources_id")
+        .references("resource_id")
         .inTable("resources")
         .onDelete("RESTRICT")
         .onUpdate("RESTRICT");

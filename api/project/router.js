@@ -3,31 +3,45 @@ const router = require("express").Router();
 const PROJECT = require("./model");
 const { validateKeys } = require("../utils");
 
+const REQUIRED_KEYS = ["project_name"];
+
+const API_DB_MAP = {
+  true: 1,
+  false: 0,
+  1: true,
+  0: false,
+};
+
 const formatProject = (project) => ({
   ...project,
-  project_completed: Boolean(project.project_completed),
+  project_completed:
+    API_DB_MAP[project.project_completed === undefined ? false : project.project_completed],
 });
 
 router.get("/", async (req, res, next) => {
   try {
     const projects = await PROJECT.getAllProjects();
-    res.json(projects.map(formatProject));
+    return res.json(projects.map(formatProject));
   } catch (err) {
     next(err);
   }
 });
 
 router.post("/", async (req, res, next) => {
-  if (validateKeys(["project_name", "project_description", "project_completed"], req.body)) {
+  if (validateKeys(REQUIRED_KEYS, req.body)) {
     try {
-      const [insertionId] = await PROJECT.insertProject(req.body);
-      res.json({ id: insertionId });
+      const project = await PROJECT.insertProject(formatProject(req.body)) //
+        .then(([id]) => PROJECT.getProject(id));
+
+      return res.json(formatProject(project));
     } catch (err) {
-      next(err);
+      return next(err);
     }
-  } else {
-    return res.status(400);
   }
+
+  return res
+    .status(400)
+    .json({ message: `Missing one or more of the required keys: ${REQUIRED_KEYS.join(", ")}` });
 });
 
 module.exports = router;

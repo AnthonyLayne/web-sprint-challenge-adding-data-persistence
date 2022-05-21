@@ -8,9 +8,6 @@ const formatProject = (project) => ({
   project_completed: Boolean(project.project_completed),
 });
 
-// `[GET] /api/projects`
-// - Even though `project_completed` is stored as an integer, the API uses booleans when interacting with the client
-// - Example of response body: `[{"project_id":1,"project_name":"bar","project_description":null,"project_completed":false}]`
 router.get("/", async (req, res, next) => {
   try {
     const projects = await PROJECT.getAllProjects();
@@ -20,9 +17,6 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-// `[POST] /api/projects`
-// - Even though `project_completed` is stored as an integer, the API uses booleans when interacting with the client
-// - Example of post body: `{ "project_name":"bar","project_description":null,"project_completed":false }`
 router.post("/", async (req, res, next) => {
   if (validateKeys(["project_name", "project_description", "project_completed"], req.body)) {
     try {

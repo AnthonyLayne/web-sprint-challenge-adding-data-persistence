@@ -3,8 +3,6 @@ const router = require("express").Router();
 const RESOURCES = require("./model");
 const { validateKeys } = require("../utils");
 
-// `[POST] /api/resources`
-// - Example of response body: `{ "resource_id":1,"resource_name":"foo","resource_description":null }`
 router.get("/", async (req, res, next) => {
   try {
     const resources = await RESOURCES.getAllResources();
@@ -14,8 +12,6 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-// `[GET] /api/resources`
-// - Example of post body: `[{ "resource_name":"foo","resource_description":null  }]`
 router.post("/", async (req, res, next) => {
   if (validateKeys(["resource_name", "resource_description"], req.body)) {
     try {

@@ -3,8 +3,11 @@ const router = require("express").Router();
 const TASKS = require("./model");
 const { validateKeys } = require("../utils");
 
-// `[POST] /api/tasks`
-// - Example of response body: `{ "task_id":1,"task_name":"foo","task_description":null }`
+const formatTask = (project) => ({
+  ...project,
+  task_completed: Boolean(project.task_completed),
+});
+
 router.get("/", async (req, res, next) => {
   try {
     const tasks = await TASKS.getAllTasks();
@@ -14,8 +17,6 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-// `[GET] /api/tasks`
-// - Example of post body: `[{ "task_name":"foo","task_description":null  }]`
 router.post("/", async (req, res, next) => {
   if (validateKeys(["task_name", "task_description"], req.body)) {
     try {

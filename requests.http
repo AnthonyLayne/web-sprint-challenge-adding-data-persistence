@@ -1,0 +1,8 @@
+POST http://localhost:9000/api/projects HTTP/1.1
+content-type: application/json
+
+{
+    "project_name": "eric",
+    "project_description": "some description",
+    "project_completed": 0
+}
